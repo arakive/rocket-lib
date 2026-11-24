@@ -2,7 +2,7 @@
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
   "cli": {
-    "packageManager": "npm"
+    "packageManager": "pnpm"
   },
   "newProjectRoot": "projects",
   "projects": {
@@ -48,6 +48,11 @@
               {
                 "glob": "**/*",
                 "input": "projects/playground/public"
+              },
+              {
+                "glob": "maplibre-gl-worker.mjs",
+                "input": "node_modules/maplibre-gl/dist",
+                "output": "assets"
               }
             ],
             "styles": [

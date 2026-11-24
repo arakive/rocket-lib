@@ -7,4 +7,8 @@
   <button rocket-button class="w-fit">Mi botón</button>
 
   <rocket-data-table [columns]="columns" [dataSource]="dataSource"></rocket-data-table>
+  <rocket-map style="height: 24rem" [center]="[-3.7038, 40.4168]" [zoom]="11">
+    <rocket-marker [coordinates]="[-3.7038, 40.4168]"></rocket-marker>
+    <rocket-marker [coordinates]="[-3.45, 40.5]" color="#2563eb" [radius]="9"></rocket-marker>
+  </rocket-map>
 </div>

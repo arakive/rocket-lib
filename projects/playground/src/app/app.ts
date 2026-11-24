@@ -3,12 +3,13 @@ import { RouterOutlet } from '@angular/router';
 import { RocketButton } from 'rocket-lib/button';
 import { RocketCard } from 'rocket-lib/card';
 import { ColDef, GetDataSource, RocketDataTable } from 'rocket-lib/data-table';
+import { RocketMap, RocketMarker } from 'rocket-lib/map';
 import { of } from 'rxjs';
 import { ELEMENT_DATA } from './mocks/mocks';
 import { PeriodicElement } from './models/periodic-element.interface';
 
 @Component({
-  imports: [RouterOutlet, RocketButton, RocketCard, RocketDataTable],
+  imports: [RouterOutlet, RocketButton, RocketCard, RocketDataTable, RocketMap, RocketMarker],
   selector: 'app-root',
   styleUrl: './app.css',
   templateUrl: './app.html',
