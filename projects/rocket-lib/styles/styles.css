@@ -13,3 +13,20 @@
   background-origin: border-box;
   background-clip: padding-box, border-box;
 }
+
+.maplibregl-popup-content {
+  padding: 1rem 0.75rem;
+}
+
+.maplibregl-popup-close-button {
+  right: 0.25rem;
+  top: 0.25rem;
+  font-size: 1rem;
+  padding: 0rem 0.25rem;
+  border: 1px solid transparent;
+}
+
+.maplibregl-popup-close-button:hover {
+  border-radius: 0.25rem;
+  border: 1px solid #8b8b8b;
+}
