@@ -1,5 +1,7 @@
-import { Directive, effect, inject, input } from '@angular/core';
+import type { TemplateRef } from '@angular/core';
+import { contentChild, Directive, effect, inject, input, ViewContainerRef } from '@angular/core';
 import type { GeoJSONSource, Map as MapLibreMap } from 'maplibre-gl';
+import { Popup } from 'maplibre-gl';
 import { RocketMapRef } from '../map-ref';
 
 /** MapLibre source and layer IDs must be unique within a map. */
@@ -10,6 +12,10 @@ let nextMarkerId = 0;
   selector: 'rocket-marker',
 })
 export class RocketMarker {
+  private readonly mapRef = inject(RocketMapRef);
+  private readonly viewContainerRef = inject(ViewContainerRef);
+  readonly popupTmp = contentChild<TemplateRef<unknown>>('popup');
+
   /** Point coordinates as [longitude, latitude]. */
   readonly coordinates = input.required<[longitude: number, latitude: number]>();
 
@@ -18,8 +24,6 @@ export class RocketMarker {
 
   /** Circle radius in pixels. */
   readonly radius = input(7);
-
-  private readonly mapRef = inject(RocketMapRef);
 
   private readonly sourceId = `rocket-marker-source-${nextMarkerId++}`;
   private readonly layerId = `${this.sourceId}-layer`;
@@ -72,29 +76,78 @@ export class RocketMarker {
 
   /** Adds the point source and circle layer once the style is ready. */
   private addLayerWhenReady(map: MapLibreMap): void {
-    if (map.getSource(this.sourceId)) {
+    if (!map.getSource(this.sourceId)) {
+      map.addSource(this.sourceId, {
+        type: 'geojson',
+        data: this.toFeature(this.coordinates()),
+      });
+    }
+
+    if (!map.getLayer(this.layerId)) {
+      map.addLayer({
+        id: this.layerId,
+        type: 'circle',
+        source: this.sourceId,
+        paint: {
+          'circle-color': this.color(),
+          'circle-radius': this.radius(),
+          'circle-stroke-color': '#ffffff',
+          'circle-stroke-width': 2,
+        },
+      });
+    }
+
+    map.off('click', this.layerId, this.handleMarkerClick);
+    map.on('click', this.layerId, this.handleMarkerClick);
+    map.off('mouseenter', this.layerId, this.handleMarkerMouseEnter);
+    map.off('mouseleave', this.layerId, this.handleMarkerMouseLeave);
+    map.on('mouseenter', this.layerId, this.handleMarkerMouseEnter);
+    map.on('mouseleave', this.layerId, this.handleMarkerMouseLeave);
+  }
+
+  private handleMarkerMouseEnter = (): void => {
+    const map = this.mapRef.map();
+    if (map?.getLayer(this.layerId)) {
+      map.setPaintProperty(this.layerId, 'circle-radius', this.radius() + 2);
+      map.getCanvas().style.cursor = 'pointer';
+    }
+  };
+
+  private handleMarkerMouseLeave = (): void => {
+    const map = this.mapRef.map();
+    if (map?.getLayer(this.layerId)) {
+      map.setPaintProperty(this.layerId, 'circle-radius', this.radius());
+      map.getCanvas().style.cursor = '';
+    }
+  };
+
+  private handleMarkerClick = () => {
+    const map = this.mapRef.map();
+    const template = this.popupTmp();
+
+    if (!template || !map) {
       return;
     }
 
-    map.addSource(this.sourceId, {
-      type: 'geojson',
-      data: this.toFeature(this.coordinates()),
-    });
-    map.addLayer({
-      id: this.layerId,
-      type: 'circle',
-      source: this.sourceId,
-      paint: {
-        'circle-color': this.color(),
-        'circle-radius': this.radius(),
-        'circle-stroke-color': '#ffffff',
-        'circle-stroke-width': 2,
-      },
-    });
-  }
+    const view = this.viewContainerRef.createEmbeddedView(template);
+    const content = document.createElement('div');
+    for (const node of view.rootNodes) {
+      content.append(node);
+    }
+
+    new Popup({ anchor: 'bottom', offset: [0, -(this.radius() + 8)] })
+      .setLngLat(this.coordinates())
+      .setDOMContent(content)
+      .addTo(map);
+  };
 
   /** Removes the layer before its source, as required by MapLibre. */
   private removeLayer(map: MapLibreMap): void {
+    map.off('click', this.layerId, this.handleMarkerClick);
+    map.off('mouseenter', this.layerId, this.handleMarkerMouseEnter);
+    map.off('mouseleave', this.layerId, this.handleMarkerMouseLeave);
+    map.getCanvas().style.cursor = '';
+
     if (map.getLayer(this.layerId)) {
       map.removeLayer(this.layerId);
     }
