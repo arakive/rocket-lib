@@ -11,6 +11,8 @@
   },
   "sideEffects": false,
   "devDependencies": {
+    "@angular/platform-browser-dynamic": "22.2.5",
+    "@ngneat/spectator": "^22.1.0",
     "@types/geojson": "^7946.0.16"
   }
 }

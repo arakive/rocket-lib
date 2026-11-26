@@ -8,8 +8,8 @@
 
   <rocket-data-table [columns]="columns" [dataSource]="dataSource"></rocket-data-table>
 
-  <div class="flex flex-col gap-5 lg:flex-row">
-    <rocket-map class="h-96" [center]="[-3.7038, 40.4168]" [zoom]="5">
+  <div class="grid grid-cols-2 gap-5">
+    <rocket-map class="h-96 col-span-2 lg:col-span-1" [center]="[-3.7038, 40.4168]" [zoom]="5">
       <rocket-marker [coordinates]="[-3.7038, 40.4168]">
         <ng-template #popup>
           <div class="flex flex-col">
@@ -28,9 +28,19 @@
         </ng-template>
       </rocket-marker>
     </rocket-map>
-
-    <rocket-map class="h-96" [center]="[-3.7038, 40.4168]">
-      <rocket-marker-group [geojson]="markerGroupGeoJSON" [multiplePopup]="false">
+    <rocket-map class="h-96 col-span-2 lg:col-span-1" [center]="[-3.7038, 40.4168]">
+      <rocket-marker-group [geojson]="markerGroupGeoJSON">
+        <ng-template #popup let-item>
+          <div class="flex flex-col">
+            <p class="font-semibold txt-xl">{{ item.name }}</p>
+            <p class="italic">{{ item.category }}</p>
+            <p class="text-xs">{{ item.description }}</p>
+          </div>
+        </ng-template>
+      </rocket-marker-group>
+    </rocket-map>
+    <rocket-map class="h-96 col-span-2 lg:col-span-1" [center]="[-3.7038, 40.4168]">
+      <rocket-marker-group [geojson]="markerGroupGeoJSON" multiplePopup>
         <ng-template #popup let-item>
           <div class="flex flex-col">
             <p class="font-semibold txt-xl">{{ item.name }}</p>
