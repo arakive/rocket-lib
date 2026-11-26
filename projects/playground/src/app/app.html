@@ -2,7 +2,9 @@
   <router-outlet></router-outlet>
 
   <h1 class="text-2xl font-bold">Rocket UI playground</h1>
-  <p class="text-sm text-slate-600">Ejemplos de componentes y directivas disponibles en la librería.</p>
+  <p class="text-sm text-slate-600">
+    Ejemplos de componentes y directivas disponibles en la librería.
+  </p>
 
   <section class="flex flex-col gap-3" aria-labelledby="card-example-title">
     <div>
@@ -44,7 +46,9 @@
       <section class="flex flex-col gap-2" aria-labelledby="individual-markers-title">
         <div>
           <h3 id="individual-markers-title" class="font-semibold">Markers individuales</h3>
-          <p class="text-sm text-slate-600">Coordenadas explícitas, estilos personalizados y popups.</p>
+          <p class="text-sm text-slate-600">
+            Coordenadas explícitas, estilos personalizados y popups.
+          </p>
         </div>
         <rocket-map class="h-96" [center]="[-3.7038, 40.4168]" [zoom]="5">
           <rocket-marker [coordinates]="[-3.7038, 40.4168]">
@@ -69,7 +73,9 @@
       <section class="flex flex-col gap-2" aria-labelledby="default-group-title">
         <div>
           <h3 id="default-group-title" class="font-semibold">Marker group predeterminado</h3>
-          <p class="text-sm text-slate-600">Puntos GeoJSON como círculos; pulsa uno para abrir su popup.</p>
+          <p class="text-sm text-slate-600">
+            Puntos GeoJSON como círculos; pulsa uno para abrir su popup.
+          </p>
         </div>
         <rocket-map class="h-96" [center]="[2.824, 41.986]" [zoom]="13">
           <rocket-marker-group [geojson]="markerGroupGeoJSON">
@@ -87,7 +93,9 @@
       <section class="flex flex-col gap-2" aria-labelledby="multiple-popups-title">
         <div>
           <h3 id="multiple-popups-title" class="font-semibold">Varios popups abiertos</h3>
-          <p class="text-sm text-slate-600">multiplePopup permite mantener abiertos varios a la vez.</p>
+          <p class="text-sm text-slate-600">
+            multiplePopup permite mantener abiertos varios a la vez.
+          </p>
         </div>
         <rocket-map class="h-96" [center]="[2.824, 41.986]" [zoom]="13">
           <rocket-marker-group [geojson]="markerGroupGeoJSON" multiplePopup>
@@ -105,7 +113,9 @@
       <section class="flex flex-col gap-2" aria-labelledby="heatmap-title">
         <div>
           <h3 id="heatmap-title" class="font-semibold">Layer avanzada: heatmap</h3>
-          <p class="text-sm text-slate-600">El color representa la densidad de puntos, de azul a rojo.</p>
+          <p class="text-sm text-slate-600">
+            El color representa la densidad de puntos, de azul a rojo.
+          </p>
         </div>
         <rocket-map class="h-96" [center]="[2.824, 41.986]" [zoom]="13">
           <rocket-marker-group
@@ -114,15 +124,21 @@
               type: 'heatmap',
               paint: {
                 'heatmap-color': [
-                  'interpolate', ['linear'], ['heatmap-density'],
-                  0, 'rgba(59, 130, 246, 0)',
-                  0.2, '#60a5fa',
-                  0.5, '#facc15',
-                  1, '#dc2626'
+                  'interpolate',
+                  ['linear'],
+                  ['heatmap-density'],
+                  0,
+                  'rgba(59, 130, 246, 0)',
+                  0.2,
+                  '#60a5fa',
+                  0.5,
+                  '#facc15',
+                  1,
+                  '#dc2626',
                 ],
                 'heatmap-radius': 28,
-                'heatmap-opacity': 0.9
-              }
+                'heatmap-opacity': 0.9,
+              },
             }"
           ></rocket-marker-group>
         </rocket-map>
@@ -142,9 +158,9 @@
               layout: {
                 'icon-image': 'playground-star',
                 'icon-size': 0.8,
-                'icon-allow-overlap': true
+                'icon-allow-overlap': true,
               },
-              paint: {}
+              paint: {},
             }"
           ></rocket-marker-group>
         </rocket-map>
