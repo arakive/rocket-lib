@@ -2,6 +2,7 @@ import type { FeatureCollection, Point } from 'geojson';
 import { PeriodicElement } from '../models/periodic-element.interface';
 
 export interface GironaPlaceProperties {
+  id: string;
   name: string;
   category: 'monument' | 'bridge' | 'park';
   description: string;
@@ -13,8 +14,10 @@ export const MOCK_FEATURE_COLLECTION: FeatureCollection<Point, GironaPlaceProper
   features: [
     {
       type: 'Feature',
+      id: 'girona-cathedral',
       geometry: { type: 'Point', coordinates: [2.8269, 41.9871] },
       properties: {
+        id: 'girona-cathedral',
         name: 'Catedral de Girona',
         category: 'monument',
         description: 'Catedral de Santa Maria, al Barri Vell.',
@@ -22,8 +25,10 @@ export const MOCK_FEATURE_COLLECTION: FeatureCollection<Point, GironaPlaceProper
     },
     {
       type: 'Feature',
+      id: 'arab-baths',
       geometry: { type: 'Point', coordinates: [2.8259, 41.9881] },
       properties: {
+        id: 'arab-baths',
         name: 'Banys Arabs',
         category: 'monument',
         description: 'Historic public baths in Girona.',
@@ -31,8 +36,10 @@ export const MOCK_FEATURE_COLLECTION: FeatureCollection<Point, GironaPlaceProper
     },
     {
       type: 'Feature',
+      id: 'eiffel-bridge',
       geometry: { type: 'Point', coordinates: [2.8246, 41.9838] },
       properties: {
+        id: 'eiffel-bridge',
         name: 'Pont de les Peixateries Velles',
         category: 'bridge',
         description: 'Metal bridge also known as the Eiffel Bridge.',
@@ -40,8 +47,10 @@ export const MOCK_FEATURE_COLLECTION: FeatureCollection<Point, GironaPlaceProper
     },
     {
       type: 'Feature',
+      id: 'sant-feliu-basilica',
       geometry: { type: 'Point', coordinates: [2.8231, 41.9851] },
       properties: {
+        id: 'sant-feliu-basilica',
         name: 'Basilica de Sant Feliu',
         category: 'monument',
         description: 'Historic basilica in the old town.',
@@ -49,8 +58,10 @@ export const MOCK_FEATURE_COLLECTION: FeatureCollection<Point, GironaPlaceProper
     },
     {
       type: 'Feature',
+      id: 'devesa-park',
       geometry: { type: 'Point', coordinates: [2.8157, 41.9855] },
       properties: {
+        id: 'devesa-park',
         name: 'Parc de la Devesa',
         category: 'park',
         description: 'Large public park in Girona.',
