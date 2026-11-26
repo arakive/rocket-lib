@@ -1,2 +1,7 @@
 packages:
   - 'projects/*'
+allowBuilds:
+  '@parcel/watcher': false
+  esbuild: true
+  lmdb: false
+  msgpackr-extract: false

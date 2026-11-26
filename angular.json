@@ -27,7 +27,11 @@
         "test": {
           "builder": "@angular/build:unit-test",
           "options": {
-            "tsConfig": "projects/rocket-lib/tsconfig.spec.json"
+            "tsConfig": "projects/rocket-lib/tsconfig.spec.json",
+            "include": [
+              "**/*.spec.ts",
+              "../map/**/*.spec.ts"
+            ]
           }
         }
       }

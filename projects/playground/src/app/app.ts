@@ -4,13 +4,21 @@ import { RouterOutlet } from '@angular/router';
 import { RocketButton } from 'rocket-lib/button';
 import { RocketCard } from 'rocket-lib/card';
 import { ColDef, GetDataSource, RocketDataTable } from 'rocket-lib/data-table';
-import { RocketMap, RocketMarker } from 'rocket-lib/map';
+import { RocketMap, RocketMarker, RocketMarkerGroup } from 'rocket-lib/map';
 import { interval, of, tap } from 'rxjs';
-import { ELEMENT_DATA } from './mocks/mocks';
+import { ELEMENT_DATA, MOCK_FEATURE_COLLECTION } from './mocks/mocks';
 import { PeriodicElement } from './models/periodic-element.interface';
 
 @Component({
-  imports: [RouterOutlet, RocketButton, RocketCard, RocketDataTable, RocketMap, RocketMarker],
+  imports: [
+    RouterOutlet,
+    RocketButton,
+    RocketCard,
+    RocketDataTable,
+    RocketMap,
+    RocketMarker,
+    RocketMarkerGroup,
+  ],
   selector: 'app-root',
   styleUrl: './app.css',
   templateUrl: './app.html',
@@ -22,6 +30,7 @@ export class App {
   protected readonly dataSource = new GetDataSource<PeriodicElement>(() =>
     of({ records: ELEMENT_DATA, totalRecords: ELEMENT_DATA.length }),
   );
+  protected readonly markerGroupGeoJSON = MOCK_FEATURE_COLLECTION;
 
   columns: ColDef<PeriodicElement>[] = [
     { key: 'position', label: 'Position' },

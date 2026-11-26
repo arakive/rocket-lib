@@ -1,4 +1,74 @@
+import type { FeatureCollection, Point } from 'geojson';
 import { PeriodicElement } from '../models/periodic-element.interface';
+
+export interface GironaPlaceProperties {
+  id: string;
+  name: string;
+  category: 'monument' | 'bridge' | 'park';
+  description: string;
+}
+
+/** Approximate public landmark locations in Girona, for map examples. */
+export const MOCK_FEATURE_COLLECTION: FeatureCollection<Point, GironaPlaceProperties> = {
+  type: 'FeatureCollection',
+  features: [
+    {
+      type: 'Feature',
+      id: 'girona-cathedral',
+      geometry: { type: 'Point', coordinates: [2.8269, 41.9871] },
+      properties: {
+        id: 'girona-cathedral',
+        name: 'Catedral de Girona',
+        category: 'monument',
+        description: 'Catedral de Santa Maria, al Barri Vell.',
+      },
+    },
+    {
+      type: 'Feature',
+      id: 'arab-baths',
+      geometry: { type: 'Point', coordinates: [2.8259, 41.9881] },
+      properties: {
+        id: 'arab-baths',
+        name: 'Banys Arabs',
+        category: 'monument',
+        description: 'Historic public baths in Girona.',
+      },
+    },
+    {
+      type: 'Feature',
+      id: 'eiffel-bridge',
+      geometry: { type: 'Point', coordinates: [2.8246, 41.9838] },
+      properties: {
+        id: 'eiffel-bridge',
+        name: 'Pont de les Peixateries Velles',
+        category: 'bridge',
+        description: 'Metal bridge also known as the Eiffel Bridge.',
+      },
+    },
+    {
+      type: 'Feature',
+      id: 'sant-feliu-basilica',
+      geometry: { type: 'Point', coordinates: [2.8231, 41.9851] },
+      properties: {
+        id: 'sant-feliu-basilica',
+        name: 'Basilica de Sant Feliu',
+        category: 'monument',
+        description: 'Historic basilica in the old town.',
+      },
+    },
+    {
+      type: 'Feature',
+      id: 'devesa-park',
+      geometry: { type: 'Point', coordinates: [2.8157, 41.9855] },
+      properties: {
+        id: 'devesa-park',
+        name: 'Parc de la Devesa',
+        category: 'park',
+        description: 'Large public park in Girona.',
+      },
+    },
+  ],
+};
 
 export const ELEMENT_DATA: PeriodicElement[] = [
   { position: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H' },
