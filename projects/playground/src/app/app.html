@@ -1,54 +1,154 @@
 <div class="flex-1 flex flex-col gap-4 p-20">
   <router-outlet></router-outlet>
-  <rocket-card>
-    <div card-title>Titulo del card</div>
-    <p>Contenido del card</p>
-  </rocket-card>
-  <button rocket-button class="w-fit">Mi botón</button>
 
-  <rocket-data-table [columns]="columns" [dataSource]="dataSource"></rocket-data-table>
+  <h1 class="text-2xl font-bold">Rocket UI playground</h1>
+  <p class="text-sm text-slate-600">Ejemplos de componentes y directivas disponibles en la librería.</p>
 
-  <div class="grid grid-cols-2 gap-5">
-    <rocket-map class="h-96 col-span-2 lg:col-span-1" [center]="[-3.7038, 40.4168]" [zoom]="5">
-      <rocket-marker [coordinates]="[-3.7038, 40.4168]">
-        <ng-template #popup>
-          <div class="flex flex-col">
-            <p class="font-semibold txt-xl">This is title</p>
-            <p class="text-sm">This is a description</p>
-          </div>
-        </ng-template>
-      </rocket-marker>
-      <rocket-marker [coordinates]="[-3.45, 40.5]" color="#2563eb" [radius]="10">
-        <ng-template #popup>
-          <div class="flex flex-col">
-            <p class="font-semibold txt-xl">This is title</p>
-            <p class="text-sm">This is a description</p>
-            <p>This value change each second: {{ second() }}</p>
-          </div>
-        </ng-template>
-      </rocket-marker>
-    </rocket-map>
-    <rocket-map class="h-96 col-span-2 lg:col-span-1" [center]="[-3.7038, 40.4168]">
-      <rocket-marker-group [geojson]="markerGroupGeoJSON">
-        <ng-template #popup let-item>
-          <div class="flex flex-col">
-            <p class="font-semibold txt-xl">{{ item.name }}</p>
-            <p class="italic">{{ item.category }}</p>
-            <p class="text-xs">{{ item.description }}</p>
-          </div>
-        </ng-template>
-      </rocket-marker-group>
-    </rocket-map>
-    <rocket-map class="h-96 col-span-2 lg:col-span-1" [center]="[-3.7038, 40.4168]">
-      <rocket-marker-group [geojson]="markerGroupGeoJSON" multiplePopup>
-        <ng-template #popup let-item>
-          <div class="flex flex-col">
-            <p class="font-semibold txt-xl">{{ item.name }}</p>
-            <p class="italic">{{ item.category }}</p>
-            <p class="text-xs">{{ item.description }}</p>
-          </div>
-        </ng-template>
-      </rocket-marker-group>
-    </rocket-map>
-  </div>
+  <section class="flex flex-col gap-3" aria-labelledby="card-example-title">
+    <div>
+      <h2 id="card-example-title" class="text-xl font-semibold">Card</h2>
+      <p class="text-sm text-slate-600">Contenedor con espacios para título y contenido.</p>
+    </div>
+    <rocket-card>
+      <div card-title>Título de la card</div>
+      <p>Contenido de ejemplo.</p>
+    </rocket-card>
+  </section>
+
+  <section class="flex flex-col gap-3" aria-labelledby="button-example-title">
+    <div>
+      <h2 id="button-example-title" class="text-xl font-semibold">Button</h2>
+      <p class="text-sm text-slate-600">Directiva que aplica estilos a un botón nativo.</p>
+    </div>
+    <button rocket-button class="w-fit">Botón de ejemplo</button>
+  </section>
+
+  <section class="flex flex-col gap-3" aria-labelledby="table-example-title">
+    <div>
+      <h2 id="table-example-title" class="text-xl font-semibold">Data table</h2>
+      <p class="text-sm text-slate-600">Tabla con columnas y un origen de datos tipado.</p>
+    </div>
+    <rocket-data-table [columns]="columns" [dataSource]="dataSource"></rocket-data-table>
+  </section>
+
+  <section class="flex flex-col gap-3" aria-labelledby="maps-example-title">
+    <div>
+      <h2 id="maps-example-title" class="text-xl font-semibold">Mapas y marcadores</h2>
+      <p class="text-sm text-slate-600">
+        rocket-map crea el mapa; rocket-marker coloca puntos individuales y rocket-marker-group
+        representa colecciones GeoJSON.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+      <section class="flex flex-col gap-2" aria-labelledby="individual-markers-title">
+        <div>
+          <h3 id="individual-markers-title" class="font-semibold">Markers individuales</h3>
+          <p class="text-sm text-slate-600">Coordenadas explícitas, estilos personalizados y popups.</p>
+        </div>
+        <rocket-map class="h-96" [center]="[-3.7038, 40.4168]" [zoom]="5">
+          <rocket-marker [coordinates]="[-3.7038, 40.4168]">
+            <ng-template #popup>
+              <div class="flex flex-col">
+                <p class="font-semibold">Madrid</p>
+                <p class="text-sm">Marker con estilo predeterminado.</p>
+              </div>
+            </ng-template>
+          </rocket-marker>
+          <rocket-marker [coordinates]="[-3.45, 40.5]" color="#2563eb" [radius]="10">
+            <ng-template #popup>
+              <div class="flex flex-col">
+                <p class="font-semibold">Marker personalizado</p>
+                <p class="text-sm">Este valor cambia cada segundo: {{ second() }}</p>
+              </div>
+            </ng-template>
+          </rocket-marker>
+        </rocket-map>
+      </section>
+
+      <section class="flex flex-col gap-2" aria-labelledby="default-group-title">
+        <div>
+          <h3 id="default-group-title" class="font-semibold">Marker group predeterminado</h3>
+          <p class="text-sm text-slate-600">Puntos GeoJSON como círculos; pulsa uno para abrir su popup.</p>
+        </div>
+        <rocket-map class="h-96" [center]="[2.824, 41.986]" [zoom]="13">
+          <rocket-marker-group [geojson]="markerGroupGeoJSON">
+            <ng-template #popup let-item>
+              <div class="flex flex-col">
+                <p class="font-semibold">{{ item.name }}</p>
+                <p class="italic">{{ item.category }}</p>
+                <p class="text-xs">{{ item.description }}</p>
+              </div>
+            </ng-template>
+          </rocket-marker-group>
+        </rocket-map>
+      </section>
+
+      <section class="flex flex-col gap-2" aria-labelledby="multiple-popups-title">
+        <div>
+          <h3 id="multiple-popups-title" class="font-semibold">Varios popups abiertos</h3>
+          <p class="text-sm text-slate-600">multiplePopup permite mantener abiertos varios a la vez.</p>
+        </div>
+        <rocket-map class="h-96" [center]="[2.824, 41.986]" [zoom]="13">
+          <rocket-marker-group [geojson]="markerGroupGeoJSON" multiplePopup>
+            <ng-template #popup let-item>
+              <div class="flex flex-col">
+                <p class="font-semibold">{{ item.name }}</p>
+                <p class="italic">{{ item.category }}</p>
+                <p class="text-xs">{{ item.description }}</p>
+              </div>
+            </ng-template>
+          </rocket-marker-group>
+        </rocket-map>
+      </section>
+
+      <section class="flex flex-col gap-2" aria-labelledby="heatmap-title">
+        <div>
+          <h3 id="heatmap-title" class="font-semibold">Layer avanzada: heatmap</h3>
+          <p class="text-sm text-slate-600">El color representa la densidad de puntos, de azul a rojo.</p>
+        </div>
+        <rocket-map class="h-96" [center]="[2.824, 41.986]" [zoom]="13">
+          <rocket-marker-group
+            [geojson]="markerGroupGeoJSON"
+            [layer]="{
+              type: 'heatmap',
+              paint: {
+                'heatmap-color': [
+                  'interpolate', ['linear'], ['heatmap-density'],
+                  0, 'rgba(59, 130, 246, 0)',
+                  0.2, '#60a5fa',
+                  0.5, '#facc15',
+                  1, '#dc2626'
+                ],
+                'heatmap-radius': 28,
+                'heatmap-opacity': 0.9
+              }
+            }"
+          ></rocket-marker-group>
+        </rocket-map>
+      </section>
+
+      <section class="flex flex-col gap-2" aria-labelledby="symbol-title">
+        <div>
+          <h3 id="symbol-title" class="font-semibold">Layer avanzada: symbol</h3>
+          <p class="text-sm text-slate-600">Usa un icono PNG personalizado en cada punto.</p>
+        </div>
+        <rocket-map class="h-96" [center]="[2.824, 41.986]" [zoom]="13">
+          <rocket-marker-group
+            [geojson]="markerGroupGeoJSON"
+            [layer]="{
+              type: 'symbol',
+              image: { id: 'playground-star', url: '/star-marker.png' },
+              layout: {
+                'icon-image': 'playground-star',
+                'icon-size': 0.8,
+                'icon-allow-overlap': true
+              },
+              paint: {}
+            }"
+          ></rocket-marker-group>
+        </rocket-map>
+      </section>
+    </div>
+  </section>
 </div>

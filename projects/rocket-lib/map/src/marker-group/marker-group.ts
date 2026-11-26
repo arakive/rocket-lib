@@ -18,6 +18,7 @@ import {
   type Map as MapLibreMap,
 } from 'maplibre-gl';
 import { RocketMapRef } from '../map-ref';
+import type { LayerConfig } from '../models/layer.interface';
 
 let nextMarkerGroupId = 0;
 
@@ -31,14 +32,17 @@ export class RocketMarkerGroup {
   readonly geojson = input.required<FeatureCollection>();
   private readonly popups = new Map<string, Popup>();
 
+  /** Optional advanced MapLibre layer configuration. */
+  readonly layer = input<LayerConfig>();
+
   /** Wether if you want to have more than 1 popup opened */
   readonly multiplePopup = input(false, { transform: booleanAttribute });
 
-  /** Circle fill color. */
+  /** Circle fill color used when no advanced layer is provided. */
   readonly color = input('#dc2626');
-
-  /** Circle radius in pixels. */
+  /** Circle radius in pixels, used when no advanced layer is provided. */
   readonly radius = input(7);
+  readonly popupOffset = input(15);
 
   private readonly sourceId = `rocket-marker-group-source-${nextMarkerGroupId++}`;
   private readonly layerId = `${this.sourceId}-layer`;
@@ -74,17 +78,27 @@ export class RocketMarkerGroup {
     }
 
     if (!map.getLayer(this.layerId)) {
-      map.addLayer({
-        id: this.layerId,
-        type: 'circle',
-        source: this.sourceId,
+      const layerConfig = this.layer() ?? {
+        type: 'circle' as const,
         paint: {
           'circle-color': this.color(),
           'circle-radius': this.radius(),
           'circle-stroke-color': '#ffffff',
           'circle-stroke-width': 2,
         },
-      });
+      };
+      const { image, ...mapLayerConfig } = layerConfig;
+      if (image && !map.hasImage(image.id)) {
+        const { data } = await map.loadImage(image.url);
+        map.addImage(image.id, data);
+      }
+
+      const layer = {
+        ...mapLayerConfig,
+        id: this.layerId,
+        source: this.sourceId,
+      };
+      map.addLayer(layer);
     }
 
     map.off('click', this.layerId, this.handleMarkerClick);
@@ -125,7 +139,7 @@ export class RocketMarkerGroup {
 
     const popup = new Popup({
       anchor: 'bottom',
-      offset: [0, -(this.radius() + 8)],
+      offset: [0, -this.popupOffset()],
       closeOnClick: !this.multiplePopup(),
     })
       .setLngLat(geometry.coordinates as LngLatLike)
