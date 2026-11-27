@@ -1,4 +1,4 @@
-import type { FeatureCollection, Point } from 'geojson';
+import type { FeatureCollection, LineString, Point } from 'geojson';
 import { PeriodicElement } from '../models/periodic-element.interface';
 
 export interface GironaPlaceProperties {
@@ -65,6 +65,47 @@ export const MOCK_FEATURE_COLLECTION: FeatureCollection<Point, GironaPlaceProper
         name: 'Parc de la Devesa',
         category: 'park',
         description: 'Large public park in Girona.',
+      },
+    },
+  ],
+};
+
+export const MOCK_LINE_GEOJSON: FeatureCollection<LineString, { color: string }> = {
+  type: 'FeatureCollection',
+  features: [
+    {
+      type: 'Feature',
+      properties: { color: '#e63946' },
+      geometry: {
+        type: 'LineString',
+        coordinates: [
+          [2.8269, 41.9871],
+          [2.8259, 41.9881],
+          [2.8246, 41.9838],
+          [2.8231, 41.9851],
+        ],
+      },
+    },
+  ],
+};
+
+export const MOCK_LINE_GEOJSON_2: FeatureCollection<LineString, { color: string }> = {
+  type: 'FeatureCollection',
+  features: [
+    {
+      type: 'Feature',
+      properties: { color: '#457b9d' },
+      geometry: {
+        type: 'LineString',
+        coordinates: [
+          [2.829, 41.989],
+          [2.8269, 41.9871],
+          [2.8259, 41.9881],
+          [2.8246, 41.9838],
+          [2.8231, 41.9851],
+          [2.819, 41.986],
+          [2.8157, 41.9855],
+        ],
       },
     },
   ],
