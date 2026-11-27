@@ -72,7 +72,9 @@
 
       <section class="flex flex-col gap-2" aria-labelledby="default-group-title">
         <div>
-          <h3 id="default-group-title" class="font-semibold">Marker group predeterminado</h3>
+          <h3 id="default-group-title" class="font-semibold">
+            Marker group predeterminado con Clusters
+          </h3>
           <p class="text-sm text-slate-600">
             Puntos GeoJSON como círculos; pulsa uno para abrir su popup.
           </p>
@@ -163,6 +165,32 @@
               paint: {},
             }"
           ></rocket-marker-group>
+        </rocket-map>
+      </section>
+
+      <section class="flex flex-col gap-2" aria-labelledby="symbol-title">
+        <div>
+          <h3 id="symbol-title" class="font-semibold">Line directive</h3>
+          <p class="text-sm text-slate-600">
+            Simple line that will get the color in feature properties as 'color' using #3388ff if
+            doesn't exist
+          </p>
+        </div>
+        <rocket-map class="h-96" [center]="[2.824, 41.986]" [zoom]="13">
+          <rocket-line [geojson]="lineGeoJSON()"></rocket-line>
+        </rocket-map>
+      </section>
+
+      <section class="flex flex-col gap-2" aria-labelledby="symbol-title">
+        <div>
+          <h3 id="symbol-title" class="font-semibold">Selectable line</h3>
+        </div>
+        <rocket-map class="h-96" [center]="[2.824, 41.986]" [zoom]="13">
+          <rocket-line [geojson]="lineGeoJSON()" selectable>
+            <ng-template #popup>
+              <div>Popup example</div>
+            </ng-template>
+          </rocket-line>
         </rocket-map>
       </section>
     </div>
