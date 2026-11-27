@@ -1,3 +1,4 @@
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import {
   afterNextRender,
   Component,
@@ -8,7 +9,6 @@ import {
   PLATFORM_ID,
   viewChild,
 } from '@angular/core';
-import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import type { Map as MapLibreMap, MapOptions } from 'maplibre-gl';
 import { RocketMapRef } from '../map-ref';
 
@@ -70,6 +70,7 @@ export class RocketMap implements OnDestroy {
       style: this.mapStyle(),
       center: this.center(),
       zoom: this.zoom(),
+      fadeDuration: 0,
     };
 
     this.map = new Map(options);
