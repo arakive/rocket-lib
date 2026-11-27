@@ -73,6 +73,17 @@ export class RocketMarkerGroup {
         this.removeLayer(map);
       });
     });
+
+    effect(() => {
+      const map = this.mapRef.map();
+      const color = this.color();
+      const radius = this.radius();
+
+      if (map?.getLayer(this.layerId) && !this.layer()) {
+        map.setPaintProperty(this.layerId, 'circle-color', color);
+        map.setPaintProperty(this.layerId, 'circle-radius', radius);
+      }
+    });
   }
 
   private async addLayerWhenReady(map: MapLibreMap) {
@@ -175,7 +186,6 @@ export class RocketMarkerGroup {
         'text-size': 12,
       },
     });
-
   }
 
   private handleClusterClick = async (event: MapLayerMouseEvent): Promise<void> => {
