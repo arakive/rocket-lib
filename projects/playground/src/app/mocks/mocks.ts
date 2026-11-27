@@ -70,7 +70,7 @@ export const MOCK_FEATURE_COLLECTION: FeatureCollection<Point, GironaPlaceProper
   ],
 };
 
-export const MOCK_LINE_GEOJSON: FeatureCollection<LineString, { color: string }> = {
+export const MOCK_LINE_GEOJSON: FeatureCollection<LineString, unknown> = {
   type: 'FeatureCollection',
   features: [
     {
@@ -89,7 +89,7 @@ export const MOCK_LINE_GEOJSON: FeatureCollection<LineString, { color: string }>
   ],
 };
 
-export const MOCK_LINE_GEOJSON_2: FeatureCollection<LineString, { color: string }> = {
+export const MOCK_LINE_GEOJSON_2: FeatureCollection<LineString, unknown> = {
   type: 'FeatureCollection',
   features: [
     {
