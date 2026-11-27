@@ -78,7 +78,7 @@
           </p>
         </div>
         <rocket-map class="h-96" [center]="[2.824, 41.986]" [zoom]="13">
-          <rocket-marker-group [geojson]="markerGroupGeoJSON">
+          <rocket-marker-group [geojson]="markerGroupGeoJSON" cluster>
             <ng-template #popup let-item>
               <div class="flex flex-col">
                 <p class="font-semibold">{{ item.name }}</p>

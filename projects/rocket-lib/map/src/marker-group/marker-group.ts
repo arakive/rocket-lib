@@ -44,8 +44,15 @@ export class RocketMarkerGroup {
   readonly radius = input(7);
   readonly popupOffset = input(15);
 
+  /** Wether if you want to have clusters or not */
+  readonly cluster = input(false, { transform: booleanAttribute });
+
+  /** Radius of the cluster */
+  readonly clusterRadius = input(50);
+
   private readonly sourceId = `rocket-marker-group-source-${nextMarkerGroupId++}`;
   private readonly layerId = `${this.sourceId}-layer`;
+  private readonly clusterLayerId = `${this.sourceId}-cluster`;
 
   constructor() {
     effect((onCleanup) => {
@@ -74,12 +81,19 @@ export class RocketMarkerGroup {
         type: 'geojson',
         data: this.geojson(),
         promoteId: 'id',
+        cluster: this.cluster(),
+        clusterRadius: this.clusterRadius(),
       });
+    }
+
+    if (this.cluster() && !map.getLayer(this.clusterLayerId)) {
+      this.addClusterLayers(map);
     }
 
     if (!map.getLayer(this.layerId)) {
       const layerConfig = this.layer() ?? {
         type: 'circle' as const,
+        filter: ['!', ['has', 'point_count']] as ['!', ['has', string]],
         paint: {
           'circle-color': this.color(),
           'circle-radius': this.radius(),
@@ -87,7 +101,9 @@ export class RocketMarkerGroup {
           'circle-stroke-width': 2,
         },
       };
-      const { image, ...mapLayerConfig } = layerConfig;
+      const { image, ...mapLayerConfig } = layerConfig as LayerConfig & {
+        image?: { id: string; url: string };
+      };
       if (image && !map.hasImage(image.id)) {
         const { data } = await map.loadImage(image.url);
         map.addImage(image.id, data);
@@ -103,6 +119,14 @@ export class RocketMarkerGroup {
 
     map.off('click', this.layerId, this.handleMarkerClick);
     map.on('click', this.layerId, this.handleMarkerClick);
+    if (this.cluster()) {
+      map.off('click', this.clusterLayerId, this.handleClusterClick);
+      map.on('click', this.clusterLayerId, this.handleClusterClick);
+      map.off('mouseenter', this.clusterLayerId, this.handleMarkerMouseEnter);
+      map.off('mouseleave', this.clusterLayerId, this.handleMarkerMouseLeave);
+      map.on('mouseenter', this.clusterLayerId, this.handleMarkerMouseEnter);
+      map.on('mouseleave', this.clusterLayerId, this.handleMarkerMouseLeave);
+    }
 
     const source = map.getSource(this.sourceId);
     if (source?.type === 'geojson') {
@@ -113,6 +137,80 @@ export class RocketMarkerGroup {
       }
     }
   }
+
+  private handleMarkerMouseEnter = (): void => {
+    const map = this.mapRef.map();
+    if (map?.getLayer(this.clusterLayerId)) {
+      map.getCanvas().style.cursor = 'pointer';
+    }
+  };
+
+  private handleMarkerMouseLeave = (): void => {
+    const map = this.mapRef.map();
+    if (map?.getLayer(this.clusterLayerId)) {
+      map.getCanvas().style.cursor = '';
+    }
+  };
+
+  private addClusterLayers(map: MapLibreMap) {
+    map.addLayer({
+      id: this.clusterLayerId,
+      type: 'circle',
+      source: this.sourceId,
+      filter: ['has', 'point_count'],
+      paint: {
+        'circle-color': ['step', ['get', 'point_count'], '#51bbd6', 100, '#f1f075', 750, '#f28cb1'],
+        'circle-radius': ['step', ['get', 'point_count'], 20, 100, 30, 750, 40],
+      },
+    });
+
+    map.addLayer({
+      id: `${this.clusterLayerId}-count`,
+      type: 'symbol',
+      source: this.sourceId,
+      filter: ['has', 'point_count'],
+      layout: {
+        'text-field': '{point_count_abbreviated}',
+        'text-font': ['Noto Sans Regular'],
+        'text-size': 12,
+      },
+    });
+
+  }
+
+  private handleClusterClick = async (event: MapLayerMouseEvent): Promise<void> => {
+    const map = this.mapRef.map();
+    if (!map) {
+      return;
+    }
+
+    const features = map.queryRenderedFeatures(event.point, {
+      layers: [this.clusterLayerId],
+    });
+
+    const feature = features[0];
+    if (!feature || feature.geometry.type !== 'Point') {
+      return;
+    }
+
+    const clusterId = feature.properties?.['cluster_id'];
+    const source = map.getSource(this.sourceId);
+
+    if (source?.type !== 'geojson' || typeof clusterId !== 'number') {
+      return;
+    }
+
+    const zoom = await (source as GeoJSONSource).getClusterExpansionZoom(clusterId);
+
+    if (this.mapRef.map() !== map || !map.getLayer(this.clusterLayerId)) {
+      return;
+    }
+
+    map.easeTo({
+      center: feature.geometry.coordinates as LngLatLike,
+      zoom,
+    });
+  };
 
   private handleMarkerClick = (event: MapLayerMouseEvent) => {
     const feature = event.features?.[0];
@@ -166,8 +264,16 @@ export class RocketMarkerGroup {
     }
     this.popups.clear();
 
-    if (map.getLayer(this.layerId)) {
-      map.removeLayer(this.layerId);
+    map.off('click', this.layerId, this.handleMarkerClick);
+    map.off('click', this.clusterLayerId, this.handleClusterClick);
+    map.off('mouseenter', this.clusterLayerId, this.handleMarkerMouseEnter);
+    map.off('mouseleave', this.clusterLayerId, this.handleMarkerMouseLeave);
+
+    const countLayerId = `${this.clusterLayerId}-count`;
+    for (const layerId of [countLayerId, this.clusterLayerId, this.layerId]) {
+      if (map.getLayer(layerId)) {
+        map.removeLayer(layerId);
+      }
     }
     if (map.getSource(this.sourceId)) {
       map.removeSource(this.sourceId);
